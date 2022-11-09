@@ -31,5 +31,10 @@ namespace PricingWorkflowExercises.Utils
             hashCode = hashCode * -1521134295 + EqualityComparer<CurrencyPair>.Default.GetHashCode(CurrencyPair);
             return hashCode;
         }
+
+        public override string ToString()
+        {
+            return $"Quote [Id={QuoteId}, CurrencyPair={CurrencyPair}]";
+        }
     }
 }

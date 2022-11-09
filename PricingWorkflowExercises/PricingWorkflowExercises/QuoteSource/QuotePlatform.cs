@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 
@@ -57,32 +58,33 @@ namespace PricingWorkflowExercises.QuoteSource
 
         private void WorkflowRunner_AllQuotesStopped(object sender, EventArgs e)
         {
-            Console.WriteLine($"");
+            Console.WriteLine($"All quotes have been stopped!");
         }
 
         private void WorkflowRunner_QuoteStopped(object sender, Quote e)
         {
-            Console.WriteLine($"");
+            Console.WriteLine($"Stopped {e}");
         }
 
         private void WorkflowRunner_QuoteExecutionSuccessful(object sender, QuoteExecutionPrice e)
         {
-            Console.WriteLine($"");
+            Console.WriteLine($"Execution successful for {e}");
         }
 
         private void WorkflowRunner_QuoteExecutionFailed(object sender, QuoteExecutionPrice e)
         {
-            Console.WriteLine($"");
+            Console.WriteLine($"Execution failed for {e}");
         }
 
         private void WorkflowRunner_QuoteStarted(object sender, Quote e)
         {
-            Console.WriteLine($"");
+            Console.WriteLine($"Started {e}");
         }
 
         private void WorkflowRunner_QuotePriceUpdated(object sender, QuotePrice e)
         {
-            Console.WriteLine($"");
+            QuotePrices.AddOrUpdate(e.Quote.QuoteId, (k) => e.Price, (k, v) => e.Price);
+            Console.WriteLine($"Price update for {e}");
         }
 
         private void Process(string nextLine)
@@ -108,7 +110,7 @@ namespace PricingWorkflowExercises.QuoteSource
                     break;
                 case "EXECUTE":
                     var executeQuoteId = int.Parse(splittedLine[1]);
-                    var executionDelta = decimal.Parse(splittedLine[2]);
+                    var executionDelta = decimal.Parse(splittedLine[2], CultureInfo.InvariantCulture);
                     if (!QuotePrices.TryGetValue(executeQuoteId, out var lastPrice))
                     {
                         lastPrice = 0;

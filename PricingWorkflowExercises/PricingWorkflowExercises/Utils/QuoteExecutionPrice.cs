@@ -10,5 +10,10 @@ namespace PricingWorkflowExercises.Utils
     {
         public Quote Quote { get; internal set; }
         public decimal ExecutionPrice { get; internal set; }
+
+        public override string ToString()
+        {
+            return $"{Quote}: Execution Price= {ExecutionPrice}";
+        }
     }
 }

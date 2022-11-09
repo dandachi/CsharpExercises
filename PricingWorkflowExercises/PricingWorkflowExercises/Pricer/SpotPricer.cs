@@ -7,7 +7,7 @@ namespace PricingWorkflowExercises.Pricer
 {
     internal class SpotPricer : IPricer, IDisposable
     {
-        private readonly List<Quote> _quotes;
+        private readonly List<Quote> _quotes = new List<Quote>();
         private object _lock = new object();
         private readonly Timer _pricingTimer;
         public event EventHandler<QuotePrice> PriceUpdated;
@@ -15,7 +15,7 @@ namespace PricingWorkflowExercises.Pricer
 
         public SpotPricer()
         {
-            _pricingTimer = new Timer(OnTimerElapsed, null, 0, TickInSeconds);
+            _pricingTimer = new Timer(OnTimerElapsed, null, 0, TickInSeconds * 1000);
         }
 
         private void OnTimerElapsed(object state)
