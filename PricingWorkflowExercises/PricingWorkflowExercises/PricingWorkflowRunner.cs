@@ -13,24 +13,34 @@ namespace PricingWorkflowExercises
         public event EventHandler<Quote> QuoteStopped;
         public event EventHandler<Quote> QuoteStarted;
         public event EventHandler AllQuotesStopped;
+        private IPricer _pricer;
 
         public PricingWorkflowRunner(IQuotePlatform quotePlatform, IPricer pricer)
         {
+            quotePlatform.QuoteRequest += OnQuoteRequest;
+            quotePlatform.ExecutionRequest += OnExecutionRequest;
+            quotePlatform.StopRequest += OnStopRequest;
+            quotePlatform.StopAllRequests += OnStopAllRequests;
+            pricer.PriceUpdated += OnPriceUpdate;
+
+            _pricer = pricer;
         }
 
         public void OnExecutionRequest(object sender, QuoteExecutionPrice executionPrice)
         {
-            throw new NotImplementedException();
+            // add more code
         }
 
         public void OnPriceUpdate(object sender, QuotePrice quotePrice)
         {
-            throw new NotImplementedException();
+            // handle new price from spot pricer
+            QuotePriceUpdated?.Invoke(this, quotePrice);
         }
 
         public void OnQuoteRequest(object sender, Quote quote)
         {
-            throw new NotImplementedException();
+            // Save quote in data structure 
+            QuoteStarted?.Invoke(this, quote);
         }
 
         public void OnStopAllRequests(object sender, EventArgs eventArgs)
